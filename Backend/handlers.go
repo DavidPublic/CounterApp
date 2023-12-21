@@ -13,6 +13,8 @@ func setupRouter() *gin.Engine {
 	router.POST("/counter/:name/increment", incrementCounterHandler)
 	router.GET("/counter/:name", getCounterHandler)
 	router.GET("/counters", listCountersHandler)
+	router.DELETE("/counter/:name", deleteCounterHandler)
+
 
 	return router
 }
@@ -45,3 +47,11 @@ func getCounterHandler(c *gin.Context) {
 func listCountersHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, counters.GetAllCounters())
 }
+
+func deleteCounterHandler(c *gin.Context) {
+    name := c.Param("name")
+    counters.DeleteCounter(name)
+    c.Status(http.StatusOK)
+}
+
+
