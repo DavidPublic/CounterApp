@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import './CounterForm.css';
+import Form from 'react-bootstrap/Form';
+import { Button } from 'react-bootstrap';
+import { InputGroup } from 'react-bootstrap';
 
 interface CounterFormProps {
     onAdd: () => void;
@@ -25,16 +28,20 @@ const CounterForm: React.FC<CounterFormProps> = ({ onAdd }) => {
         setName('');
     };
 
-    return (
-        <form onSubmit={handleSubmit} className="counter-form">
-            <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Counter name"
+    return (     
+        <Form onSubmit={handleSubmit}>
+            <InputGroup className="mb-3">
+            <Button type='submit' variant="dark" id="button-addon1">
+                Create Counter
+        </Button>
+            <Form.Control 
+                type="text" 
+                placeholder="Name a new counter" 
+                value={name}  
+                onChange={(e) => setName(e.target.value)} 
             />
-            <button type="submit">Create Counter</button>
-        </form>
+            </InputGroup>
+        </Form>
     );
 };
 
