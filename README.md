@@ -1,7 +1,7 @@
 # CounterApp
 
 To run the app locally using Docker,
-Start docker, then:
+Start docker, then open a teminal/console in the CounterApp folder and run::
 
 ```
 docker-compose up --build  
