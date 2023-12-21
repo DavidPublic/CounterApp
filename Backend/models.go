@@ -24,3 +24,10 @@ func NewCountersMap() *CountersMap {
 		nextID: 1,
 	}
 }
+
+func (cm *CountersMap) DeleteCounter(name string) {
+    cm.Lock()
+    defer cm.Unlock()
+    delete(cm.m, name)
+}
+

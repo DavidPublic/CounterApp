@@ -1,6 +1,6 @@
 import React from 'react';
 import './Counter.css';
-import { Button, Container } from 'react-bootstrap';
+import { Button, CloseButton } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -32,9 +32,9 @@ interface CounterProps {
                 <h3>{counter.value}</h3>
             </Col>
             <Col>
-                <Button variant="secondary" className="btn-dark" onClick={
-                    () => onDelete(counter.name)}>Delete
-                </Button>{' '}
+                <CloseButton variant="secondary" className="topright" onClick={
+                    () => onDelete(counter.name)}>
+                </CloseButton>{' '}
             </Col>
         </Row>
         </Card.Body>
