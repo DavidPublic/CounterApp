@@ -6,16 +6,19 @@ import (
     "github.com/stretchr/testify/mock"
 )
 
+
 func TestCreateCounter(t *testing.T) {
     mockSvc := new(MockDynamoDBAPI)
     counter := &Counter{Name: "Test Counter", Value: 0}
 
-    mockSvc.On("PutItem", mock.Anything).Return(&dynamodb.PutItemOutput{}, nil)
+    // Set up the expected response and error to return from the mock
+    mockSvc.On("PutItem", mock.AnythingOfType("*dynamodb.PutItemInput")).Return(&dynamodb.PutItemOutput{}, nil)
 
     err := CreateCounter(mockSvc, counter)
     if err != nil {
-        t.Errorf("Expected no error, got %v", err)
+        t.Errorf("CreateCounter() error = %v, wantErr %v", err, nil)
     }
 
+    // Assert that the expectations were met
     mockSvc.AssertExpectations(t)
 }
