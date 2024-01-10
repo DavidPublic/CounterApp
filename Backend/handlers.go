@@ -1,57 +1,56 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"net/http"
+    "github.com/gin-gonic/gin"
+    "net/http"
 )
 
 func setupRouter() *gin.Engine {
-	router := gin.Default()
-	router.Use(CORSMiddleware())
+    router := gin.Default()
+    router.Use(CORSMiddleware())
 
-	router.POST("/counter", createCounterHandler)
-	router.POST("/counter/:name/increment", incrementCounterHandler)
-	router.GET("/counter/:name", getCounterHandler)
-	router.GET("/counters", listCountersHandler)
-	router.DELETE("/counter/:name", deleteCounterHandler)
+    router.POST("/counter", createCounterHandler)
+    router.POST("/counter/:name/increment", incrementCounterHandler)
+    router.GET("/counter/:name", getCounterHandler)
+    router.DELETE("/counter/:name", deleteCounterHandler)
+    router.GET("/counters", listCountersHandler)
 
-
-	return router
+    return router
 }
 
 func createCounterHandler(c *gin.Context) {
-	var newCounter Counter
-	if err := c.BindJSON(&newCounter); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	counters.CreateCounter(newCounter.Name)
-	c.Status(http.StatusCreated)
+    var newCounter Counter
+    if err := c.BindJSON(&newCounter); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        return
+    }
+    CreateCounter(&newCounter)
+    c.Status(http.StatusCreated)
 }
 
 func incrementCounterHandler(c *gin.Context) {
-	name := c.Param("name")
-	counters.IncrementCounter(name)
-	c.Status(http.StatusOK)
+    name := c.Param("name")
+    IncrementCounter(name, 1)
+    c.Status(http.StatusOK)
 }
 
 func getCounterHandler(c *gin.Context) {
-	name := c.Param("name")
-	if counter, ok := counters.GetCounter(name); ok {
-		c.JSON(http.StatusOK, counter)
-	} else {
-		c.Status(http.StatusNotFound)
-	}
-}
-
-func listCountersHandler(c *gin.Context) {
-	c.JSON(http.StatusOK, counters.GetAllCounters())
+    name := c.Param("name")
+    counter, err := GetCounter(name)
+    if err != nil {
+        c.JSON(http.StatusNotFound, gin.H{"error": "Counter not found"})
+        return
+    }
+    c.JSON(http.StatusOK, counter)
 }
 
 func deleteCounterHandler(c *gin.Context) {
     name := c.Param("name")
-    counters.DeleteCounter(name)
+    DeleteCounter(name)
     c.Status(http.StatusOK)
 }
 
-
+func listCountersHandler(c *gin.Context) {
+    counters := GetAllCounters()
+    c.JSON(http.StatusOK, counters)
+}

@@ -1,33 +1,8 @@
 package main
 
-import (
-	"sync"
-)
-
+// Counter represents a counter with an ID, name, and value.
 type Counter struct {
-	ID    int    `json:"id"`
-	Name  string `json:"name"`
-	Value int    `json:"value"`
+    ID    int    `json:"id" dynamodbav:"ID"`
+    Name  string `json:"name" dynamodbav:"Name"`
+    Value int    `json:"value" dynamodbav:"Value"`
 }
-
-type CountersMap struct {
-	sync.RWMutex
-	m      map[string]*Counter
-	nextID int
-}
-
-var counters = NewCountersMap()
-
-func NewCountersMap() *CountersMap {
-	return &CountersMap{
-		m:      make(map[string]*Counter),
-		nextID: 1,
-	}
-}
-
-func (cm *CountersMap) DeleteCounter(name string) {
-    cm.Lock()
-    defer cm.Unlock()
-    delete(cm.m, name)
-}
-
