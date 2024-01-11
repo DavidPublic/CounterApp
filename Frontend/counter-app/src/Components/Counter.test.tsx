@@ -1,34 +1,36 @@
-import React from 'react';
-import { render, fireEvent, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
 import Counter from './Counter';
 
-interface CounterProps {
-    counter: {
-        id: number;
-        name: string;
-        value: number;
-    };
-    onIncrement: (name: string) => void;
-    onDelete: (name: string) => void;
-}
-
-const mockIncrement = jest.fn();
-const mockDelete = jest.fn();
-
-describe('Counter Component', () => {
-  test('displays the counter value', () => {
-    const counter = { id: 1, name: 'Test Counter', value: 5 };
-    render(<Counter counter={counter} onIncrement={mockIncrement} onDelete={mockDelete} />);
+describe('Counter', () => {
+  it('renders the counter with correct values', () => {
+    const mockCounter = { id: 1, name: 'Test Counter', value: 5 };
+    render(<Counter counter={mockCounter} onIncrement={() => {}} onDelete={() => {}} />);
 
     expect(screen.getByText('Test Counter')).toBeInTheDocument();
-    expect(screen.getByText(/value: 5/i)).toBeInTheDocument();
+    expect(screen.getByText('5')).toBeInTheDocument();
   });
 
-  test('calls onIncrement when increment button is clicked', () => {
-    render(<Counter counter={{ id: 1, name: 'Test Counter', value: 5 }} onIncrement={mockIncrement} onDelete={mockDelete} />);
+  it('calls onIncrement when the increment button is clicked', () => {
+    const mockCounter = { id: 1, name: 'Test Counter', value: 5 };
+    const mockIncrement = vi.fn();
+    render(<Counter counter={mockCounter} onIncrement={mockIncrement} onDelete={() => {}} />);
 
-    fireEvent.click(screen.getByText(/increment/i));
+    const incrementButton = screen.getByText('Increment');
+    fireEvent.click(incrementButton);
+
     expect(mockIncrement).toHaveBeenCalledWith('Test Counter');
+  });
+
+  it('calls onDelete when the close button is clicked', () => {
+    const mockCounter = { id: 1, name: 'Test Counter', value: 5 };
+    const mockDelete = vi.fn();
+    render(<Counter counter={mockCounter} onIncrement={() => {}} onDelete={mockDelete} />);
+
+    const deleteButton = screen.getByRole('button', { name: /close/i });
+    fireEvent.click(deleteButton);
+
+    expect(mockDelete).toHaveBeenCalledWith('Test Counter');
   });
 });
